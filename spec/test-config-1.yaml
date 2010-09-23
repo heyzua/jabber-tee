@@ -1,0 +1,13 @@
+username: 'gabe@someplace.org'
+password: 'pinchme!Imsecret!'
+nick: 'Gabe'
+
+profiles:
+  standard:
+    room: 'cudos@rooms.someplace.org'
+    sasl: true
+  weird:
+    username: 'weirdo@someplaceelse.org'
+    password: 'notsosecret'
+    nick: 'Jabberwocky Slayer'
+    to: 'jabber-monster@someplaceelse.org'

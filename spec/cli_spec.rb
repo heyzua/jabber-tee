@@ -32,10 +32,6 @@ module JabberTee
     include CLIHelper
 
     describe "when just checking arguments" do
-      it "should parse the server name correctly" do
-        check(:server, ['-s', '--server'], 'some.server.com')
-      end
-
       it "should parse the username correctly" do
         check(:username, ['-u', '--username'], 'someuser')
       end
@@ -56,16 +52,12 @@ module JabberTee
         check(:anonymous, ['-a', '--anonymous'], true)
       end
 
-      it "should parse the nocolor flag correctly" do
-        check(:nocolor, ['--nocolor'], true)
+      it "should parse the room flag correctly" do
+        check(:room, ['-r', '--room'], 'ROOM')
       end
-
-      it "should parse the stdout flag correctly" do
-        check(:stdout, ['--stdout'], 'COLOR')
-      end
-
-      it "should parse the stderr flag correctly" do
-        check(:stderr, ['--stderr'], 'COLOR')
+     
+      it "should parse the nickname flag correctly" do
+        check(:nick, ['-n', '--nick'], 'nickname!')
       end
     end
 
@@ -74,14 +66,6 @@ module JabberTee
 
       it "should fail when there are extra arguments" do
         attempting_to { validate('extra-arg') }.should raise_error(CE, /extra/)
-      end
-
-      it "should fail when the username and anonymous aren't specified." do
-        attempting_to { validate('-p', 'password') }.should raise_error(CE, /username or anonymous/)
-      end
-
-      it "should fail when the 'to' isn't specified." do
-        attempting_to { validate('--username', 'u') }.should raise_error(CE, /to/)
       end
     end
   end

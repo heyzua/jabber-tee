@@ -1,30 +1,28 @@
 require 'optparse'
 require 'jabber-tee/errors'
 require 'jabber-tee/version'
+require 'jabber-tee/client'
+require 'jabber-tee/configuration'
 
 module JabberTee
   class CLI
     attr_reader :options, :args
-    attr_accessor :check_home_config
 
     def initialize(args)
       @args = args
-      @check_home_configs = true
     end
 
     def execute!
-      parse!(@args.dup)
-
-      # TODO
-    end
-
-    def parse!(args)
       begin
-        parse_options(args)
-        if check_home_config
-          merge_options
+        parse!(@args.dup)
+        config = load_configuration
+
+        if config.destination_missing?
+          raise JabberTee::ConfigurationError.new("Either the --to or --room flag is required.")
         end
-        validate_args(args)
+
+        client = Client.new(config)
+        client.pump!
       rescue SystemExit => e
         raise
       rescue JabberTee::ConfigurationError => e
@@ -37,6 +35,11 @@ module JabberTee
       end
     end
 
+    def parse!(args)
+      parse_options(args)
+      validate_args(args)
+    end
+
     def parse_options(args)
       @options ||= {}
       @parsed_options ||= OptionParser.new do |opts|
@@ -44,9 +47,9 @@ module JabberTee
         opts.separator <<DESC
 Description:
    This is a simple tool for reading from STDIN and writing
-   to both STDOUT and a remote jabber server.  By default,
-   STDERR is colored red when passed to the jabber server,
-   but this can be changed by the configuration file.
+   to both STDOUT and a remote jabber server.  It does not handle
+   reading from STDERR, so you will need to re-direct 2>&1 before
+   piping it to this tool.
 
    The configuration file should live under ~/.jabber-tee.yml.
    Please see http://github.com/gabemc/jabber-tee for more
@@ -54,11 +57,7 @@ Description:
 
 Options:
 DESC
-        opts.separator "   Connecting:"
-        opts.on('-s', '--server JABBER',
-                "The jabber server to connect to.  This is required.") do |s|
-          options[:server] = s
-        end
+        opts.separator "  Connecting:"
         opts.on('-u', '--username USERNAME',
                 "The user@host.org name to connect to the jabber server.") do |u|
           options[:username] = u
@@ -68,6 +67,10 @@ DESC
                 "If not given or defined in the .jabber-tee.yml file,",
                 "it will be asked during runtime.") do |p|
           options[:password] = p
+        end
+        opts.on('-n', '--nick NICKNAME',
+                "The nickname to use when connecting to the server.") do |n|
+          options[:nick] = n
         end
         opts.on('-a', '--anonymous',
                 "Disregards the username information and logs in using anonymous",
@@ -92,30 +95,18 @@ DESC
         end
         opts.separator ""
 
-        opts.separator "   Output:"
+        opts.separator "  Output: (One required)"
         opts.on('-t', '--to TO',
-                "Who to send the message to.  This is required.") do |t|
+                "Who to send the message to.") do |t|
           options[:to] = t
         end
-        opts.on('--nocolor',
-                "Don't color the output to the jabber server.") do |n|
-          options[:nocolor] = true
-        end
-        opts.on('--stderr COLOR',
-                "Colors the STDERR stream to the jabber server.") do |s|
-          options[:stderr] = s
-        end
-        opts.on('--stdout COLOR',
-                "Colors the stdout stream to the jabber server.") do |s|
-          options[:stdout] = s
+        opts.on('-r', '--room ROOM',
+                "The room to send the messages to.") do |r|
+          options[:room] = r 
         end
         opts.separator ""
 
-        opts.separator "   Informative:"
-        #opts.on('-d', '--debug', 
-        #        "Prints extra debug information") do |d|
-        #  options[:debug] = d
-        #end
+        opts.separator "  Informative:"
         opts.on('-v', '--version',
                 "Show the version information") do |v|
           puts "#{File.basename($0)} version: #{JabberTee::Version.to_s}"
@@ -131,21 +122,9 @@ DESC
       end.parse!(args)
     end
 
-    def merge_options
-      raise Exception.new("not done")
-    end
-
     def validate_args(args)
       if args.length > 0
         raise JabberTee::ConfigurationError.new("This command takes no extra arguments: #{args[0]}")
-      end
-
-      if !options[:username] && !options[:anonymous] && !options[:profile]
-        raise JabberTee::ConfigurationError.new("Either the username or anonymous authentication are required if no profile is specified.")
-      end
-      
-      if !options[:to]
-        raise JabberTee::ConfigurationError.new("The --to flag to send the message to is required.")
       end
     end
 
@@ -154,6 +133,24 @@ DESC
       STDERR.puts "#{File.basename($0)}: #{e}"
       STDERR.puts "#{File.basename($0)}: Try '--help' for more information"
       exit 1
+    end
+
+    JABBER_FILE = '.jabber-tee.yml'
+
+    def load_configuration
+      home = ENV['HOME'] # TODO: Windows users?
+      config_file = File.join(home, JABBER_FILE)
+
+      if File.exists?(config_file)
+        reader = ConfigurationReader.new(config_file)
+        if options.has_key?(:profile)
+          reader.profile(options[:profile]).merge(options)
+        else
+          reader.profile.merge(options)
+        end
+      else
+        Configuration.new(options)
+      end
     end
   end # CLI
 end

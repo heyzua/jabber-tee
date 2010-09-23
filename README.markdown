@@ -12,7 +12,7 @@ The command line tool can be installed with:
 
 The general idea is that you can pipe anything from the console into this, and it will be sent to the remote jabber server:
 
-    cat huge_text_file.txt | jabber-tee -s jabber.google.com -u madeonamac@gmail.com --to somebody.else@gmail.com
+    cat huge_text_file.txt | jabber-tee -u peon@bigcorp.com --room working-hard@rooms.bigcorp.com --nick 'Worker Drone'
   
 # Configuration
 
@@ -22,27 +22,26 @@ An example configuration file:
 
     # Global configuration values:
     username: my.name@jabber.org
-    server: jabber.org
-    colors: 
-        stderr: red
+    nick: 'Gabe'
 
     # Individual profiles that customize global variables    
     profiles:
+        new-hotness:
+            # Uses the standard username, above
+            nick: 'Mr. Super Cool'
+            room: 'HipCentral'
+    
         somebody.else:
-            username: madeonamac@gmail.com
+            username: supercooldude@gmail.com
+            nick: 'Rocksteady Gabe'
             to: somebody.else@gmail.com
-            server: jabber.google.com
-            colors:
-                stdout:  #F7F7F7
-                stderr:  #ECECEC
-            
+
         work-stuff:
-            server: jabber.bigcorp.com
             username: peon@bigcorp.com
-            sasl: true
-            # Uses the global stderr colors defined above
+            nick: 'Worker Drone'
+            room: working-hard@rooms.bigcorp.com
 
 You can then activate these individual profiles from the command line with the '-P' flag.  So, the above command could be replaced with:
 
-    cat huge_text_file.txt | jabber-tee -P somebody.else
+    cat huge_text_file.txt | jabber-tee -P work-stuff
 
