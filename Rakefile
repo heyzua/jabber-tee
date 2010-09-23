@@ -23,7 +23,7 @@ begin
     gem.version        = JabberTee::Version.to_s
     gem.executables    = %W{jabber-tee}
     gem.summary        = 'Simple command line utility for piping the output from one command to both the console and a remote jabber server.'
-    gem.description    = "Installs the 'jabber-pipe' utility for sending messages to a remote jabber server.  Instead of a standard client, it reads from standard in and continues to write to the console."
+    gem.description    = "Installs the 'jabber-tee' utility for sending messages to a remote jabber server.  Instead of a standard client, it reads from standard in and continues to write to the console."
     gem.email          = ['madeonamac@gmail.com']
     gem.authors        = ['Gabe McArthur']
     gem.homepage       = 'http://github.com/gabemc/jabber-tee'
