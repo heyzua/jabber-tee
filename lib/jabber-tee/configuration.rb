@@ -27,7 +27,7 @@ module JabberTee
           raise JabberTee::ConfigurationError.new("Unable to load an profiles from your home configuration.")
         end
         profile = profiles[name]
-        if config.nil?
+        if profile.nil?
           raise JabberTee::ConfigurationError.new("Unable to load the #{name} profile from your home configuration.")
         end
         config.merge(profile)
@@ -47,6 +47,7 @@ module JabberTee
     end
 
     def merge(options)
+      #self if options.nil?
       ATTRIBUTES.each do |attr|
         if options.has_key?(attr.to_sym) || options.has_key?(attr)
           value = options[attr.to_sym] || options[attr]

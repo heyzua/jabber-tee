@@ -59,32 +59,39 @@ Options:
 DESC
         opts.separator "  Connecting:"
         opts.on('-u', '--username USERNAME',
-                "The user@host.org name to connect to the jabber server.") do |u|
+                "The user@host.org name to connect",
+                "to the jabber server.") do |u|
           options[:username] = u
         end
         opts.on('-p', '--password PASSWORD',
-                "The password for the user to connect to the jabber server.",
-                "If not given or defined in the .jabber-tee.yml file,",
-                "it will be asked during runtime.") do |p|
+                "The password for the user to connect",
+                "to the jabber server.  If not given",
+                "it must be defined in your",
+                "~/.jabber-tee.yml file.") do |p|
           options[:password] = p
         end
         opts.on('-n', '--nick NICKNAME',
-                "The nickname to use when connecting to the server.") do |n|
+                "The nickname to use when connecting",
+                "to the server.") do |n|
           options[:nick] = n
         end
+=begin
         opts.on('-a', '--anonymous',
-                "Disregards the username information and logs in using anonymous",
-                "authentication.  Either the --username or the --authentication",
-                "flag are required.") do |a|
+                "Disregards the username information and",
+                "logs in using anonymous authentication.") do |a|
           options[:anonymous] = true
         end
+=end
         opts.on('-P', '--profile PROFILE',
-                "The name of the profile, as defined in the .jabber-tee.yml",
-                "file to use to connect with.") do |p|
+                "The name of the profile, as defined in",
+                "the ~/.jabber-tee.yml file to use to",
+                "connect with.") do |p|
           options[:profile] = p
         end
+=begin
         opts.on('--sasl',
-                "By default, the connection does not use SASL authentication.",
+                "By default, the connection does not",
+                "use SASL authentication.",
                 "This enables SASL connections") do |s|
           options[:sasl] = true
         end
@@ -93,6 +100,7 @@ DESC
                 "authentication mechanism.") do |d|
           options[:digest] = true
         end
+=end
         opts.separator ""
 
         opts.separator "  Output: (One required)"

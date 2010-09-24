@@ -39,7 +39,7 @@ module JabberTee
       it "should parse the password correctly" do
         check(:password, ['-p', '--password'], 'super_!!_secret')
       end
-
+=begin
       it "should parse the sasl flag correctly" do
         check(:sasl, ['--sasl'], true)
       end
@@ -47,10 +47,10 @@ module JabberTee
       it "should parse the digest flag correctly" do
         check(:digest, ['--digest'], true)
       end
-
       it "should parse the anonymous flag correctly" do
         check(:anonymous, ['-a', '--anonymous'], true)
       end
+=end
 
       it "should parse the room flag correctly" do
         check(:room, ['-r', '--room'], 'ROOM')
