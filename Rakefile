@@ -4,15 +4,14 @@ $LOAD_PATH.unshift File.expand_path("../spec", __FILE__)
 require 'fileutils'
 require 'rake'
 require 'rubygems'
-require 'spec/rake/spectask'
+require 'rspec/core/rake_task'
 require 'jabber-tee/version'
 
 task :default => :spec
 
 desc "Run the RSpec tests"
-Spec::Rake::SpecTask.new(:spec) do |t|
-  t.spec_files = FileList['spec/**/*_spec.rb']
-  t.spec_opts = ['-b', '-c', '-f', 'p']
+RSpec::Core::RakeTask.new do |t|
+  t.rspec_opts = ['-b', '-c', '-f', 'p']
   t.fail_on_error = false
 end
 
@@ -32,7 +31,7 @@ begin
     gem.add_dependency    'highline',   '>=1.5.2'
     gem.add_dependency    'xmpp4r',     '>=0.5'
     
-    gem.add_development_dependency 'rspec', '>=1.3.0'
+    gem.add_development_dependency 'rspec', '>=2.0.1'
   end
 rescue LoadError
   puts "Jeweler or dependencies are not available.  Install it with: sudo gem install jeweler"
