@@ -13,7 +13,10 @@ The command line tool can be installed with:
 The general idea is that you can pipe anything from the console into this, and it will be sent to the remote jabber server:
 
     cat huge_text_file.txt | jabber-tee -u peon@bigcorp.com --room working-hard@rooms.bigcorp.com --nick 'Worker Drone'
-  
+
+or
+    echo "I am $(whoami) at $(hostname)" | jabber-tee -to somebody@somewhere.com
+
 # Configuration
 
 Because entering the same information on the command line for this thing can be tedious, you can create a ~/.jabber-tee.yml file that fills in all of the basic configuration.  This file also allows you to further customize the output that is sent to the jabber server.
@@ -24,7 +27,7 @@ An example configuration file:
     username: my.name@jabber.org
     nick: 'Gabe'
 
-    # Individual profiles that customize global variables    
+    # Individual profiles that customize global variables
     profiles:
         new-hotness:
             # Uses the standard username, above
@@ -35,6 +38,7 @@ An example configuration file:
             username: supercooldude@gmail.com
             nick: 'Rocksteady Gabe'
             to: somebody.else@gmail.com
+            password: secret
 
         work-stuff:
             username: peon@bigcorp.com
