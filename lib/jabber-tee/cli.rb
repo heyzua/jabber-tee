@@ -67,7 +67,8 @@ DESC
                 "The password for the user to connect",
                 "to the jabber server.  If not given",
                 "it must be defined in your",
-                "~/.jabber-tee.yml file.") do |p|
+                "~/.jabber-tee.yml or",
+                "/etc/jabber-tee.yml file.") do |p|
           options[:password] = p
         end
         opts.on('-n', '--nick NICKNAME',
@@ -84,8 +85,8 @@ DESC
 =end
         opts.on('-P', '--profile PROFILE',
                 "The name of the profile, as defined in",
-                "the ~/.jabber-tee.yml file to use to",
-                "connect with.") do |p|
+                "the ~/.jabber-tee.yml or /etc/jabber-tee.yml",
+                "file to use to connect with.") do |p|
           options[:profile] = p
         end
 =begin
@@ -110,7 +111,7 @@ DESC
         end
         opts.on('-r', '--room ROOM',
                 "The room to send the messages to.") do |r|
-          options[:room] = r 
+          options[:room] = r
         end
         opts.separator ""
 
@@ -143,13 +144,22 @@ DESC
       exit 1
     end
 
-    JABBER_FILE = '.jabber-tee.yml'
+    # TODO: Does 'home' work for Windows users?
+    JABBER_FILE_LOCATIONS = [
+      File.join(ENV["HOME"], ".jabber-tee.yml"),
+      "/etc/jabber-tee.yml"
+    ]
 
     def load_configuration
-      home = ENV['HOME'] # TODO: Windows users?
-      config_file = File.join(home, JABBER_FILE)
+      config_file = nil
+      JABBER_FILE_LOCATIONS.each do |location|
+        if File.exists?(location)
+          config_file = location
+          break
+        end
+      end
 
-      if File.exists?(config_file)
+      if config_file
         reader = ConfigurationReader.new(config_file)
         if options.has_key?(:profile)
           reader.profile(options[:profile]).merge(options)
