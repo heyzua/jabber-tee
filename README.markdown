@@ -13,6 +13,14 @@ The command line tool can be installed with:
 The general idea is that you can pipe anything from the console into this, and it will be sent to the remote jabber server:
 
     cat huge_text_file.txt | jabber-tee -u peon@bigcorp.com --room working-hard@rooms.bigcorp.com --nick 'Worker Drone'
+
+or
+
+    echo "I am $(whoami) at $(hostname)" | jabber-tee --to somebody@somewhere.com
+
+Alternatively, you can supply a list of arguments that will be run as a command, which is essentially equivalent:
+
+    jabber-tee --to somebody@somewhere.com -- echo "I am $(whoami) at $(hostname)"
   
 # Configuration
 
@@ -24,12 +32,13 @@ An example configuration file:
     username: my.name@jabber.org
     nick: 'Gabe'
 
-    # Individual profiles that customize global variables    
+    # Individual profiles that customize global variables
     profiles:
         new-hotness:
             # Uses the standard username, above
             nick: 'Mr. Super Cool'
             room: 'HipCentral'
+            password: 'secret'
     
         somebody.else:
             username: supercooldude@gmail.com

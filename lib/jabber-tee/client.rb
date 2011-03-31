@@ -1,6 +1,4 @@
 require 'jabber-tee/errors'
-
-require 'rubygems'
 require 'xmpp4r'
 require 'xmpp4r/muc'
 
@@ -20,20 +18,8 @@ module JabberTee
       end
     end
 
-    def pump!
-      if $stdin.tty?
-        $STDERR.puts "Unable to pipe jabber-tee from a TTY"
-        exit(1)
-      else
-        $stdin.each do |line|
-          line.chomp!
-          say(line)
-          puts line
-        end
-      end
-    end
-
     def say(message)
+      message.chomp!
       if config.in_room?
         @muc.say(message)
       else

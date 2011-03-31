@@ -2,4 +2,4 @@
 $LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..', 'lib')
 
 require 'jabber-tee/cli'
-JabberTee::CLI.new(ARGV).execute!
+JabberTee::CLI.new.execute!(ARGV)

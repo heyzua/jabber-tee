@@ -44,16 +44,6 @@ module JabberTee
       c.anonymous?.should be(false)
     end
 
-    it "should set SASL mode to false by default" do
-      c = Configuration.new
-      c.sasl?.should be(false)
-    end
-
-    it "should set the digest mode to false by default" do
-      c = Configuration.new
-      c.digest?.should be(false)
-    end
-
     it "should se the 'in_room?' attribute to false by default" do
       c = Configuration.new
       c.in_room?.should be(false)
