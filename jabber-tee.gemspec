@@ -1,16 +1,14 @@
 require 'rubygems'
 require 'rake'
 
-version = begin
-            require 'choosy/version'
-            Choosy::Version.load_from_lib.to_s
-          rescue LoadError
-            '0'
-          end
-
 Gem::Specification.new do |gem|
   gem.name           = 'jabber-tee'
-  gem.version        = version
+  gem.version        = begin
+                         require 'choosy/version'
+                         Choosy::Version.load_from_lib.to_s
+                       rescue
+                         '0'
+                       end
   gem.executables    = %W{jabber-tee}
   gem.summary        = 'Simple command line utility for piping the output from one command to both the console and a remote jabber server.'
   gem.description    = "Installs the 'jabber-tee' utility for sending messages to a remote jabber server.  Instead of a standard client, it reads from standard in and continues to write to the console."
