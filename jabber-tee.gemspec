@@ -6,7 +6,7 @@ Gem::Specification.new do |gem|
   gem.version        = begin
                          require 'choosy/version'
                          Choosy::Version.load_from_lib.to_s
-                       rescue
+                       rescue LoadError
                          '0'
                        end
   gem.executables    = %W{jabber-tee}

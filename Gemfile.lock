@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    jabber-tee (0.1.1)
+    jabber-tee (0)
       choosy (>= 0.4.8)
       highline (>= 1.5.2)
       xmpp4r (>= 0.5)
@@ -14,7 +14,7 @@ GEM
       ZenTest (>= 4.4.1)
     autotest-notification (2.3.1)
       autotest (~> 4.3)
-    choosy (0.4.8)
+    choosy (0.4.9)
     diff-lcs (1.1.2)
     highline (1.6.1)
     rspec (2.5.0)
@@ -33,8 +33,5 @@ PLATFORMS
 DEPENDENCIES
   autotest
   autotest-notification
-  choosy (>= 0.4.8)
-  highline (>= 1.5.2)
   jabber-tee!
   rspec
-  xmpp4r (>= 0.5)

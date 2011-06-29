@@ -1,0 +1,31 @@
+#!/bin/zsh
+
+if [ -z "$1" ]; then
+    RVM_RUBY_VERSION='1.9.2'
+else
+    RVM_RUBY_VERSION="$1"
+fi
+
+RVM_GEM_NAME=$(ls -1 *.gemspec | head -n 1 | sed -e 's/\.gemspec//')
+
+rvm use ${RVM_RUBY_VERSION}
+if rvm gemset list | grep -q ${RVM_GEM_NAME}; then
+    rvm gemset create ${RVM_GEM_NAME}
+fi
+
+rvm use ${RVM_RUBY_VERSION}@${RVM_GEM_NAME}
+
+ruby -e "require 'bundler'" > /dev/null 2>&1
+if [ $? -ne 0 ]; then
+    gem install bundler --no-ri --no-rdoc
+fi
+
+ruby -e "require 'choosy'" > /dev/null 2>&1
+if [ $? -ne 0 ] && cat *.gemspec | grep -q choosy; then
+    gem install choosy --no-ri --no-rdoc
+fi
+
+if ! gem list | grep -q rspec; then
+    bundle install
+fi
+
