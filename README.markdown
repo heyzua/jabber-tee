@@ -21,16 +21,19 @@ or
 Alternatively, you can supply a list of arguments that will be run as a command, which is essentially equivalent:
 
     jabber-tee --to somebody@somewhere.com -- echo "I am $(whoami) at $(hostname)"
-  
+
 # Configuration
 
-Because entering the same information on the command line for this thing can be tedious, you can create a ~/.jabber-tee.yml file that fills in all of the basic configuration.  This file also allows you to further customize the output that is sent to the jabber server.
+Because entering the same information on the command line for this thing can be tedious, you can create a config file (checks for ~/.jabber-tee.yml then /etc/jabber.tee.yml) file that fills in all of the basic configuration.  This file also allows you to further customize the output that is sent to the jabber server.
 
 An example configuration file:
 
     # Global configuration values:
     username: my.name@jabber.org
     nick: 'Gabe'
+    password: 'secret'
+    to: somebody@somewhere.com
+
 
     # Individual profiles that customize global variables
     profiles:
@@ -39,7 +42,7 @@ An example configuration file:
             nick: 'Mr. Super Cool'
             room: 'HipCentral'
             password: 'secret'
-    
+
         somebody.else:
             username: supercooldude@gmail.com
             nick: 'Rocksteady Gabe'
@@ -52,5 +55,8 @@ An example configuration file:
 
 You can then activate these individual profiles from the command line with the '-P' flag.  So, the above command could be replaced with:
 
+    # Send message with global configs
+    date | jabber-tee
+    # Send message with 'work-stuff' profile
     cat huge_text_file.txt | jabber-tee -P work-stuff
 
